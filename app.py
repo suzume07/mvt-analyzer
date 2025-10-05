@@ -180,6 +180,31 @@ st.dataframe(mvt_table[display_cols].rename(columns={
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
 st.header("4. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
+if len(df) < 2:
+    st.warning("⚠️ Cần ít nhất 2 kỳ để tính toán.")
+else:
+    slopes, comments, periods = [], [], []
+
+    for i in range(len(df) - 1):
+        a, b = df.iloc[i, 1], df.iloc[i + 1, 1]
+        slope = b - a
+        slopes.append(slope)
+        periods.append(f"{df.iloc[i, 0]} → {df.iloc[i + 1, 0]}")
+
+        if slope > 0:
+            comments.append("🔼 Tăng trưởng")
+        elif slope < 0:
+            comments.append("🔻 Suy giảm")
+        else:
+            comments.append("⏸ Ổn định")
+
+    results = pd.DataFrame({
+        "Khoảng thời gian": periods,
+        "Tốc độ thay đổi (Δ)": slopes,
+        "Nhận xét": comments
+    })
+
+    st.dataframe(results)
 for rec in records:
     seg = rec["Segment"]
     with st.expander(f"Giải thích: {seg}", expanded=False):
