@@ -246,6 +246,6 @@ st.markdown("""
 - Bởi dữ liệu thực là rời rạc (theo quý/năm), ta dùng các xấp xỉ đạo hàm (forward/backward/central) để mô phỏng f'(t).  
 - Khi f' tại hai đầu bao lấy slope trung bình, ta nội suy tuyến tính giữa hai giá trị đạo hàm để tìm vị trí c ước lượng (giả thiết đạo hàm biến đổi đều trong khoảng nhỏ).  
 - Phương pháp này gần đúng; nếu cần chính xác hơn có thể:
-  - dùng nội suy spline để có hàm mượt hơn rồi giải f'(t)=slope trong khoảng, hoặc
+  - dùng nội suy spline để có hàm mượt hơn rồi giải f'(t)=slope trong khoảng
   - dùng dữ liệu có phân giải cao hơn (theo ngày/tuần).
 """)
