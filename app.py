@@ -180,31 +180,6 @@ st.dataframe(mvt_table[display_cols].rename(columns={
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
 st.header("4. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
-if len(df) < 2:
-    st.warning("⚠️ Cần ít nhất 2 kỳ để tính toán.")
-else:
-    slopes, comments, periods = [], [], []
-
-    for i in range(len(df) - 1):
-        a, b = df.iloc[i, 1], df.iloc[i + 1, 1]
-        slope = b - a
-        slopes.append(slope)
-        periods.append(f"{df.iloc[i, 0]} → {df.iloc[i + 1, 0]}")
-
-        if slope > 0:
-            comments.append("🔼 Tăng trưởng")
-        elif slope < 0:
-            comments.append("🔻 Suy giảm")
-        else:
-            comments.append("⏸ Ổn định")
-
-    results = pd.DataFrame({
-        "Khoảng thời gian": periods,
-        "Tốc độ thay đổi (Δ)": slopes,
-        "Nhận xét": comments
-    })
-
-    st.dataframe(results)
 for rec in records:
     seg = rec["Segment"]
     with st.expander(f"Giải thích: {seg}", expanded=False):
@@ -265,6 +240,42 @@ ax.set_title("Dữ liệu & các điểm MVT ước lượng (với các tiếp 
 ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1))
 st.pyplot(fig)
 
+if len(df) < 2:
+    st.warning("⚠️ Cần ít nhất 2 kỳ để tính toán.")
+else:
+    slopes, comments, periods = [], [], []
+
+    for i in range(len(df) - 1):
+        a, b = df.iloc[i, 1], df.iloc[i + 1, 1]
+        slope = b - a
+        slopes.append(slope)
+        periods.append(f"{df.iloc[i, 0]} → {df.iloc[i + 1, 0]}")
+
+        if slope > 0:
+            comments.append("🔼 Tăng trưởng")
+        elif slope < 0:
+            comments.append("🔻 Suy giảm")
+        else:
+            comments.append("⏸ Ổn định")
+
+    results = pd.DataFrame({
+        "Khoảng thời gian": periods,
+        "Tốc độ thay đổi (Δ)": slopes,
+        "Nhận xét": comments
+    })
+
+    st.dataframe(results)
+
+      avg_slope = np.mean(slopes)
+    if avg_slope > 0:
+        overall = "✅ Doanh nghiệp đang *tăng trưởng trung bình ổn định*."
+    elif avg_slope < 0:
+        overall = "⚠️ Doanh nghiệp có xu hướng *suy giảm nhẹ* trong giai đoạn này."
+    else:
+        overall = "ℹ️ Doanh nghiệp *ổn định, không thay đổi đáng kể*."
+
+    st.success(overall)
+
 st.markdown("""
 ---
 *Ghi chú về phương pháp:*  
@@ -274,3 +285,11 @@ st.markdown("""
   - dùng nội suy spline để có hàm mượt hơn rồi giải f'(t)=slope trong khoảng
   - dùng dữ liệu có phân giải cao hơn (theo ngày/tuần).
 """)
+
+st.markdown("""
+    *Giải thích theo Định lý Giá trị Trung bình (MVT):*  
+    Giữa hai kỳ báo cáo liên tiếp, tồn tại ít nhất một thời điểm mà *tốc độ thay đổi tức thời* của chỉ tiêu kinh doanh  
+    (ví dụ doanh thu hoặc lợi nhuận) *bằng đúng tốc độ thay đổi trung bình* đã tính ở trên.  
+    Điều này có nghĩa là, trong khoảng giữa hai quý, có một giai đoạn thực tế mà công ty đang hoạt động  
+    với đúng mức "động lượng" trung bình đó – phản ánh xu hướng tăng trưởng hoặc suy giảm bền vững.
+    """)
