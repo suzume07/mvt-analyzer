@@ -266,15 +266,6 @@ else:
 
     st.dataframe(results)
 
-      avg_slope = np.mean(slopes)
-    if avg_slope > 0:
-        overall = "✅ Doanh nghiệp đang *tăng trưởng trung bình ổn định*."
-    elif avg_slope < 0:
-        overall = "⚠️ Doanh nghiệp có xu hướng *suy giảm nhẹ* trong giai đoạn này."
-    else:
-        overall = "ℹ️ Doanh nghiệp *ổn định, không thay đổi đáng kể*."
-
-    st.success(overall)
 
 st.markdown("""
 ---
