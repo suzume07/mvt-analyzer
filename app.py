@@ -89,3 +89,39 @@ else:
     Điều này có nghĩa là, trong khoảng giữa hai quý, có một giai đoạn thực tế mà công ty đang hoạt động  
     với đúng mức "động lượng" trung bình đó – phản ánh xu hướng tăng trưởng hoặc suy giảm bền vững.
     """)
+# -------------------------------------------------
+    # 🔍 Phân tích chi tiết theo Định lý Giá trị Trung bình (MVT)
+    # -------------------------------------------------
+    st.subheader("🧮 Phân tích theo Định lý Giá trị Trung bình (MVT)")
+
+    values = df["Giá trị"].to_numpy()
+    n = len(values)
+
+    # Tính xấp xỉ đạo hàm tại từng điểm giữa (central difference)
+    derivatives = []
+    for i in range(1, n-1):
+        d = (values[i+1] - values[i-1]) / 2
+        derivatives.append(d)
+
+    # Gán giá trị trung bình của các slope để tìm điểm gần nhất (MVT point)
+    avg_slope = np.mean(slopes)
+    if derivatives:
+        diffs = [abs(d - avg_slope) for d in derivatives]
+        idx_c = np.argmin(diffs) + 1  # +1 vì đạo hàm bắt đầu từ index 1
+        c_label = df["Kỳ"].iloc[idx_c]
+        c_value = df["Giá trị"].iloc[idx_c]
+
+        st.write(f"📍 Điểm MVT ước lượng: *{c_label}* (giá trị: {c_value:.2f})")
+        st.write(f"👉 Tại thời điểm này, tốc độ thay đổi tức thời ≈ tốc độ trung bình của toàn giai đoạn (≈ {avg_slope:+.2f}).")
+
+        # Diễn giải ý nghĩa
+        if avg_slope > 0:
+            st.info("💡 Theo MVT: có một thời điểm trong giai đoạn mà doanh nghiệp tăng trưởng đúng bằng tốc độ trung bình. "
+                    "Điều này phản ánh giai đoạn hoạt động ổn định và bền vững nhất.")
+        elif avg_slope < 0:
+            st.warning("📉 Theo MVT: có một thời điểm mà mức suy giảm tức thời bằng đúng tốc độ suy giảm trung bình. "
+                       "Đây là giai đoạn doanh nghiệp cần chú ý để tránh suy giảm kéo dài.")
+        else:
+            st.info("⚖️ Theo MVT: doanh nghiệp giữ tốc độ không đổi trong giai đoạn — biểu hiện cân bằng nội tại.")
+    else:
+        st.write("⚠️ Không đủ dữ liệu để ước lượng điểm MVT (cần ít nhất 3 kỳ).")
