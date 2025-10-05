@@ -1,0 +1,17 @@
+# 📈 MVT Analyzer – Hiểu toán qua dữ liệu kinh doanh
+
+Ứng dụng trực quan hóa "Định lý Giá trị Trung bình (Mean Value Theorem)" bằng dữ liệu thực tế.
+
+## 🎯 Mục tiêu
+Giúp học sinh và sinh viên *hiểu khái niệm tốc độ thay đổi trung bình (slope) trong toán học  
+qua *các số liệu kinh tế thực tế* như doanh thu, lợi nhuận, GDP, v.v.
+
+## 🧩 Tính năng
+- Nhập dữ liệu doanh thu/lợi nhuận theo thời gian (CSV hoặc nhập tay)
+- Tự động tính toán tốc độ thay đổi trung bình giữa các kỳ
+- Sinh nhận xét tự động (“tăng trưởng”, “suy giảm”, “ổn định”)
+- Biểu đồ trực quan và phần giải thích ý nghĩa MVT
+
+## ⚙️ Cách sử dụng
+pip install -r requirements.txt
+streamlit run app.py
