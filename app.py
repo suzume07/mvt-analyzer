@@ -185,7 +185,7 @@ slopes = np.diff(y) / np.diff(t)  # dt = 1 -> chỉ là diff
 periods = [f"{df.loc[i,'Kỳ']} → {df.loc[i+1,'Kỳ']}" for i in range(n-1)]
 
 # --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
-#deriv = np.zeros(n)
+deriv = np.zeros(n)
 if n == 2:
     # trivial: forward/backward same
     deriv[0] = slopes[0]
@@ -197,37 +197,37 @@ else:
         deriv[i] = (y[i+1] - y[i-1]) / (t[i+1] - t[i-1])  # central difference
 
 
-for rec in records:
-    seg = rec["Segment"]
-    with st.expander(f"Giải thích: {seg}", expanded=False):
-        st.markdown(f"*Bước 1 – Dữ liệu đầu vào:* a = {rec['a_label']} = {rec['a_val']:.3f}, b = {rec['b_label']} = {rec['b_val']:.3f}")
-        st.markdown(f"*Bước 2 – Tính tốc độ thay đổi trung bình (slope):*")
-        st.markdown(f"> slope = (f(b) - f(a)) / (t_b - t_a) = ({rec['b_val']:.3f} - {rec['a_val']:.3f}) / 1 = *{rec['slope']:+.3f}*")
-        st.markdown(f"*Bước 3 – Ước lượng đạo hàm tại hai đầu đoạn:*")
-        st.markdown(f"> f'({rec['a_label']}) ≈ {rec['deriv_a']:+.3f},  f'({rec['b_label']}) ≈ {rec['deriv_b']:+.3f}")
-        st.markdown(f"*Bước 4 – Kiểm tra tính trung gian (Intermediate Value):*")
-        if rec["bracket"]:
-            st.markdown(f"> Vì slope = *{rec['slope']:+.3f}* nằm giữa f'({rec['a_label']}) và f'({rec['b_label']}), theo tính chất trung gian có tồn tại c ∈ ({rec['a_label']}, {rec['b_label']}).")
-            st.markdown(f"*Bước 5 – Tìm c ước lượng:* phương pháp: {rec['method']}")
-            st.markdown(f"> Vị trí ước lượng c ≈ *{rec['c_pos']:.3f}* (tức nằm cách {rec['a_label']} khoảng {(rec['c_pos']-int(rec['c_pos'])):.3f} phần của khoảng đến {rec['b_label']}).")
-            st.markdown(f"> Ước lượng f(c) bằng nội suy tuyến tính ≈ *{rec['y_c']:.3f}*.")
-            st.markdown(f"> Ước lượng f'(c) bằng nội suy giữa f'({rec['a_label']}) và f'({rec['b_label']}) ≈ *{rec['deriv_c']:+.3f}*.")
-            st.markdown(f"> Sai khác |f'(c) - slope| = *{rec['residual']:.3e}* (mong muốn nhỏ).")
-        else:
-            st.markdown(f"> slope = *{rec['slope']:+.3f}* không nằm giữa f'({rec['a_label']}) và f'({rec['b_label']}).")
-            st.markdown(f"> Chúng tôi chọn điểm có f' gần nhất theo phương pháp: {rec['method']}, ước lượng c = *{rec['c_pos']:.3f}*.")
-            st.markdown(f"> Giá trị f(c) ước lượng = *{rec['y_c']:.3f}, f'(c) ≈ *{rec['deriv_c']:+.3f}*, sai khác = *{rec['residual']:.3e}**.")
+#for rec in records:
+#    seg = rec["Segment"]
+ #   with st.expander(f"Giải thích: {seg}", expanded=False):
+   #     st.markdown(f"*Bước 1 – Dữ liệu đầu vào:* a = {rec['a_label']} = {rec['a_val']:.3f}, b = {rec['b_label']} = {rec['b_val']:.3f}")
+   #     st.markdown(f"*Bước 2 – Tính tốc độ thay đổi trung bình (slope):*")
+   #     st.markdown(f"> slope = (f(b) - f(a)) / (t_b - t_a) = ({rec['b_val']:.3f} - {rec['a_val']:.3f}) / 1 = *{rec['slope']:+.3f}*")
+   #     st.markdown(f"*Bước 3 – Ước lượng đạo hàm tại hai đầu đoạn:*")
+   #     st.markdown(f"> f'({rec['a_label']}) ≈ {rec['deriv_a']:+.3f},  f'({rec['b_label']}) ≈ {rec['deriv_b']:+.3f}")
+   #     st.markdown(f"*Bước 4 – Kiểm tra tính trung gian (Intermediate Value):*")
+#    if rec["bracket"]:
+#            st.markdown(f"> Vì slope = *{rec['slope']:+.3f}* nằm giữa f'({rec['a_label']}) và f'({rec['b_label']}), theo tính chất trung gian có tồn tại c ∈ ({rec['a_label']}, {rec['b_label']}).")
+#            st.markdown(f"*Bước 5 – Tìm c ước lượng:* phương pháp: {rec['method']}")
+#            st.markdown(f"> Vị trí ước lượng c ≈ *{rec['c_pos']:.3f}* (tức nằm cách {rec['a_label']} khoảng {(rec['c_pos']-int(rec['c_pos'])):.3f} phần của khoảng đến {rec['b_label']}).")
+#            st.markdown(f"> Ước lượng f(c) bằng nội suy tuyến tính ≈ *{rec['y_c']:.3f}*.")
+#            st.markdown(f"> Ước lượng f'(c) bằng nội suy giữa f'({rec['a_label']}) và f'({rec['b_label']}) ≈ *{rec['deriv_c']:+.3f}*.")
+#            st.markdown(f"> Sai khác |f'(c) - slope| = *{rec['residual']:.3e}* (mong muốn nhỏ).")
+ #       else:
+ #           st.markdown(f"> slope = *{rec['slope']:+.3f}* không nằm giữa f'({rec['a_label']}) và f'({rec['b_label']}).")
+ #           st.markdown(f"> Chúng tôi chọn điểm có f' gần nhất theo phương pháp: {rec['method']}, ước lượng c = *{rec['c_pos']:.3f}*.")
+ #           st.markdown(f"> Giá trị f(c) ước lượng = *{rec['y_c']:.3f}, f'(c) ≈ *{rec['deriv_c']:+.3f}*, sai khác = *{rec['residual']:.3e}**.")
         # Interpretation
-        st.markdown("*Diễn giải ý nghĩa kinh doanh (gợi ý):*")
-        if rec["slope"] > 0:
-            st.markdown("- slope > 0: doanh thu (hoặc chỉ tiêu) tăng trung bình trong khoảng này.")
-            st.markdown(f"- Điểm c ước lượng cho thấy giai đoạn mà doanh nghiệp có tốc độ tăng đúng bằng tốc độ trung bình (thời điểm có 'momentum' nhất).")
-        elif rec["slope"] < 0:
-            st.markdown("- slope < 0: doanh thu giảm trung bình trong khoảng này.")
-            st.markdown(f"- Điểm c ước lượng có thể là thời điểm cảnh báo quản trị (nên xem chi tiết nguyên nhân tại khoảng này).")
-        else:
-            st.markdown("- slope = 0: không thay đổi tổng thể trong khoảng này.")
-        st.markdown("---")
+ #       st.markdown("*Diễn giải ý nghĩa kinh doanh (gợi ý):*")
+ #       if rec["slope"] > 0:
+ #           st.markdown("- slope > 0: doanh thu (hoặc chỉ tiêu) tăng trung bình trong khoảng này.")
+ #           st.markdown(f"- Điểm c ước lượng cho thấy giai đoạn mà doanh nghiệp có tốc độ tăng đúng bằng tốc độ trung bình (thời điểm có 'momentum' nhất).")
+ #       elif rec["slope"] < 0:
+ #           st.markdown("- slope < 0: doanh thu giảm trung bình trong khoảng này.")
+ #           st.markdown(f"- Điểm c ước lượng có thể là thời điểm cảnh báo quản trị (nên xem chi tiết nguyên nhân tại khoảng này).")
+ #       else:
+ #           st.markdown("- slope = 0: không thay đổi tổng thể trong khoảng này.")
+ #       st.markdown("---")
 
 # --- Vẽ biểu đồ với điểm c và tiếp tuyến ước lượng ---
 st.header("4. Biểu đồ minh họa (các điểm MVT & tiếp tuyến ước lượng)")
