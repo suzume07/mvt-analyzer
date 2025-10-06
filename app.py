@@ -283,6 +283,17 @@ else:
 
     st.dataframe(results)
 
+# 🔹 Tổng kết định tính toàn giai đoạn dựa trên slope trung bình
+avg_slope = np.mean(slopes)
+if avg_slope > 0:
+    overall = "✅ Doanh nghiệp đang tăng trưởng trung bình ổn định."
+elif avg_slope < 0:
+    overall = "⚠️ Doanh nghiệp có xu hướng suy giảm nhẹ trong giai đoạn này."
+else:
+    overall = "ℹ️ Doanh nghiệp ổn định, không thay đổi đáng kể."
+
+st.success(overall)
+
 # --- Tính slope giữa từng cặp ---
 st.header("2. Tính toán cơ bản")
 t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
