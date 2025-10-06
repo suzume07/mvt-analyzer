@@ -230,7 +230,7 @@ else:
  #       st.markdown("---")
 
 # --- Vẽ biểu đồ với điểm c và tiếp tuyến ước lượng ---
-st.header("4. Biểu đồ minh họa (các điểm MVT & tiếp tuyến ước lượng)")
+st.header("2. Biểu đồ minh họa (các điểm MVT & tiếp tuyến ước lượng)")
 fig, ax = plt.subplots(figsize=(10, 4))
 x = t
 ax.plot(x, y, marker="o", linestyle="-", label="Giá trị thực tế")
@@ -295,7 +295,7 @@ else:
 st.success(overall)
 
 # --- Tính slope giữa từng cặp ---
-st.header("2. Tính toán cơ bản")
+st.header("3. Tính toán cơ bản")
 t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
 y = df["Giá trị"].to_numpy()
 
@@ -333,7 +333,7 @@ st.subheader("Đạo hàm xấp xỉ tại từng điểm (tốc độ tức th�
 st.dataframe(deriv_df.style.format({"Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": "{:+.3f}"}))
 
 # --- Phân tích MVT cho từng đoạn ---
-st.header("2. Phân tích MVT – từng bước cho mỗi đoạn")
+st.header("3. Phân tích MVT – từng bước cho mỗi đoạn")
 
 records = []
 plot_mvt_points = []  # (c, y_c, slope, segment_index)
@@ -423,7 +423,7 @@ st.dataframe(mvt_table[display_cols].rename(columns={
 }))
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
-st.header("2. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
+st.header("4. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
 #tinh slope giua tung cap#
 t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
 y = df["Giá trị"].to_numpy()
