@@ -154,28 +154,25 @@ for i in range(n - 1):
 mvt_table = pd.DataFrame(records)
 # hiển thị bảng tóm tắt
 st.subheader("Bảng tóm tắt MVT ước lượng cho từng đoạn")
-display_cols = ["Segment", "a_val", "b_val", "slope", "deriv_a", "deriv_b", "bracket", "c_pos", "y_c", "deriv_c", "residual", "method"]
+display_cols = ["Segment", "a_val", "b_val", "slope", "deriv_a", "deriv_b", "y_c", "deriv_c"]
 st.dataframe(mvt_table[display_cols].rename(columns={
     "a_val": "Giá trị a",
     "b_val": "Giá trị b",
     "slope": "Slope (Δ)",
     "deriv_a": "Đạo hàm tại a",
     "deriv_b": "Đạo hàm tại b",
-    "c_pos": "Vị trí c (index float)",
     "y_c": "Giá trị f(c) ước lượng",
     "deriv_c": "Đạo hàm ước lượng tại c",
-    "residual": "|f'(c)-slope|",
-    "method": "Phương pháp tìm c"
+
 }).style.format({
     "Giá trị a": "{:.3f}",
     "Giá trị b": "{:.3f}",
     "Slope (Δ)": "{:+.3f}",
     "Đạo hàm tại a": "{:+.3f}",
     "Đạo hàm tại b": "{:+.3f}",
-    "Vị trí c (index float)": "{:.3f}",
     "Giá trị f(c) ước lượng": "{:.3f}",
     "Đạo hàm ước lượng tại c": "{:+.3f}",
-    "|f'(c)-slope|": "{:.3e}"
+
 }))
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
