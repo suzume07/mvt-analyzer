@@ -65,6 +65,17 @@ slopes_df = pd.DataFrame({
 st.subheader("Slope (tốc độ thay đổi trung bình) giữa các kỳ")
 st.dataframe(slopes_df.style.format({"Slope (Δ = b - a)": "{:+.3f}"}))
 
+# 🔹 Tổng kết định tính toàn giai đoạn dựa trên slope trung bình
+avg_slope = np.mean(slopes)
+if avg_slope > 0:
+    overall = "✅ Doanh nghiệp đang tăng trưởng trung bình ổn định."
+elif avg_slope < 0:
+    overall = "⚠️ Doanh nghiệp có xu hướng suy giảm nhẹ trong giai đoạn này."
+else:
+    overall = "ℹ️ Doanh nghiệp ổn định, không thay đổi đáng kể."
+
+st.success(overall)
+
 # --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
 deriv = np.zeros(n)
 if n == 2:
@@ -262,16 +273,6 @@ else:
     })
 
     st.dataframe(results)
-
-avg_slope = np.mean(slopes)
-    if avg_slope > 0:
-        overall = "✅ Doanh nghiệp đang *tăng trưởng trung bình ổn định*."
-    elif avg_slope < 0:
-        overall = "⚠️ Doanh nghiệp có xu hướng *suy giảm nhẹ* trong giai đoạn này."
-    else:
-        overall = "ℹ️ Doanh nghiệp *ổn định, không thay đổi đáng kể*."
-
-    st.success(overall)
 
 st.markdown("""
 ---
