@@ -48,7 +48,7 @@ if n < 2:
     st.stop()
 
 # --- Tính slope giữa từng cặp ---
-st.header("2. Tính toán cơ bản")
+#2. Tính toán cơ bản")
 t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
 y = df["Giá trị"].to_numpy()
 
@@ -56,14 +56,14 @@ slopes = np.diff(y) / np.diff(t)  # dt = 1 -> chỉ là diff
 periods = [f"{df.loc[i,'Kỳ']} → {df.loc[i+1,'Kỳ']}" for i in range(n-1)]
 
 # hiển thị bảng slopes
-slopes_df = pd.DataFrame({
-    "Khoảng thời gian": periods,
-    "Giá trị tại a": [y[i] for i in range(n-1)],
-    "Giá trị tại b": [y[i+1] for i in range(n-1)],
-    "Slope (Δ = b - a)": slopes
-})
-st.subheader("Slope (tốc độ thay đổi trung bình) giữa các kỳ")
-st.dataframe(slopes_df.style.format({"Slope (Δ = b - a)": "{:+.3f}"}))
+#slopes_df = pd.DataFrame({
+ #   "Khoảng thời gian": periods,
+  #  "Giá trị tại a": [y[i] for i in range(n-1)],
+   # "Giá trị tại b": [y[i+1] for i in range(n-1)],
+    #"Slope (Δ = b - a)": slopes
+#})
+#st.subheader("Slope (tốc độ thay đổi trung bình) giữa các kỳ")
+#st.dataframe(slopes_df.style.format({"Slope (Δ = b - a)": "{:+.3f}"}))
 
 # --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
 deriv = np.zeros(n)
@@ -77,16 +77,16 @@ else:
     for i in range(1, n-1):
         deriv[i] = (y[i+1] - y[i-1]) / (t[i+1] - t[i-1])  # central difference
 
-deriv_df = pd.DataFrame({
-    "Kỳ": df["Kỳ"],
-    "Giá trị": df["Giá trị"],
-    "Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": deriv
-})
-st.subheader("Đạo hàm xấp xỉ tại từng điểm (tốc độ tức thời)")
-st.dataframe(deriv_df.style.format({"Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": "{:+.3f}"}))
+#deriv_df = pd.DataFrame({
+#    "Kỳ": df["Kỳ"],
+ #   "Giá trị": df["Giá trị"],
+  #  "Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": deriv
+#})
+#st.subheader("Đạo hàm xấp xỉ tại từng điểm (tốc độ tức thời)")
+#st.dataframe(deriv_df.style.format({"Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": "{:+.3f}"}))
 
 # --- Phân tích MVT cho từng đoạn ---
-st.header("2. Phân tích MVT – từng bước cho mỗi đoạn")
+#st.header("2. Phân tích MVT – từng bước cho mỗi đoạn")
 
 records = []
 plot_mvt_points = []  # (c, y_c, slope, segment_index)
