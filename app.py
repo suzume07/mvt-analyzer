@@ -463,7 +463,7 @@ for rec in records:
             st.markdown(f"- Điểm c ước lượng có thể là thời điểm cảnh báo quản trị (nên xem chi tiết nguyên nhân tại khoảng này).")
         else:
             st.markdown("- slope = 0: không thay đổi tổng thể trong khoảng này.")
-             st.markdown("---")
+            
 st.markdown("""
 *Ghi chú về phương pháp:*  
 - Bởi dữ liệu thực là rời rạc (theo quý/năm), ta dùng các xấp xỉ đạo hàm (forward/backward/central) để mô phỏng f'(t).  
