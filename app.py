@@ -47,6 +47,60 @@ if n < 2:
     st.warning("Cần ít nhất 2 kỳ để phân tích.")
     st.stop()
 
+# --- Vẽ biểu đồ với điểm c và tiếp tuyến ước lượng ---
+st.header("4. Biểu đồ minh họa (các điểm MVT & tiếp tuyến ước lượng)")
+fig, ax = plt.subplots(figsize=(10, 4))
+x = t
+ax.plot(x, y, marker="o", linestyle="-", label="Giá trị thực tế")
+# vẽ các secant line
+for i in range(n-1):
+    ax.plot([i, i+1], [y[i], y[i+1]], color="gray", linestyle="--", alpha=0.6)
+# đánh dấu các điểm c và vẽ tiếp tuyến (tangent) ước lượng
+colors = ["orange", "red", "green", "purple", "brown", "cyan"]
+for idx, (c, y_c, slope, seg_i) in enumerate(plot_mvt_points):
+    ax.scatter(c, y_c, color=colors[idx % len(colors)], s=80, zorder=5)
+    # vẽ tiếp tuyến khoảng nhỏ quanh c
+    x_line = np.linspace(max(0, c-0.8), min(n-1, c+0.8), 50)
+    y_line = y_c + slope * (x_line - c)
+    ax.plot(x_line, y_line, color=colors[idx % len(colors)], linestyle='-', linewidth=1.5, alpha=0.8,
+            label=f"Tangent approx seg {seg_i} ({slope:+.2f})")
+    # chú thích
+    ax.text(c, y_c, f" c≈{c:.2f}", fontsize=8, verticalalignment="bottom")
+
+ax.set_xticks(x)
+ax.set_xticklabels(df["Kỳ"], rotation=30)
+ax.set_xlabel("Kỳ")
+ax.set_ylabel("Giá trị")
+ax.set_title("Dữ liệu & các điểm MVT ước lượng (với các tiếp tuyến ước lượng)")
+ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1))
+st.pyplot(fig)
+
+if len(df) < 2:
+    st.warning("⚠️ Cần ít nhất 2 kỳ để tính toán.")
+else:
+    slopes, comments, periods = [], [], []
+
+    for i in range(len(df) - 1):
+        a, b = df.iloc[i, 1], df.iloc[i + 1, 1]
+        slope = b - a
+        slopes.append(slope)
+        periods.append(f"{df.iloc[i, 0]} → {df.iloc[i + 1, 0]}")
+
+        if slope > 0:
+            comments.append("🔼 Tăng trưởng")
+        elif slope < 0:
+            comments.append("🔻 Suy giảm")
+        else:
+            comments.append("⏸ Ổn định")
+
+    results = pd.DataFrame({
+        "Khoảng thời gian": periods,
+        "Tốc độ thay đổi (Δ)": slopes,
+        "Nhận xét": comments
+    })
+
+    st.dataframe(results)
+
 # --- Tính slope giữa từng cặp ---
 st.header("2. Tính toán cơ bản")
 t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
@@ -228,111 +282,6 @@ for rec in records:
         else:
             st.markdown("- slope = 0: không thay đổi tổng thể trong khoảng này.")
         st.markdown("---")
-
-# --- Vẽ biểu đồ với điểm c và tiếp tuyến ước lượng ---
-st.header("4. Biểu đồ minh họa (các điểm MVT & tiếp tuyến ước lượng)")
-fig, ax = plt.subplots(figsize=(10, 4))
-x = t
-ax.plot(x, y, marker="o", linestyle="-", label="Giá trị thực tế")
-# vẽ các secant line
-for i in range(n-1):
-    ax.plot([i, i+1], [y[i], y[i+1]], color="gray", linestyle="--", alpha=0.6)
-# đánh dấu các điểm c và vẽ tiếp tuyến (tangent) ước lượng
-colors = ["orange", "red", "green", "purple", "brown", "cyan"]
-for idx, (c, y_c, slope, seg_i) in enumerate(plot_mvt_points):
-    ax.scatter(c, y_c, color=colors[idx % len(colors)], s=80, zorder=5)
-    # vẽ tiếp tuyến khoảng nhỏ quanh c
-    x_line = np.linspace(max(0, c-0.8), min(n-1, c+0.8), 50)
-    y_line = y_c + slope * (x_line - c)
-    ax.plot(x_line, y_line, color=colors[idx % len(colors)], linestyle='-', linewidth=1.5, alpha=0.8,
-            label=f"Tangent approx seg {seg_i} ({slope:+.2f})")
-    # chú thích
-    ax.text(c, y_c, f" c≈{c:.2f}", fontsize=8, verticalalignment="bottom")
-
-ax.set_xticks(x)
-ax.set_xticklabels(df["Kỳ"], rotation=30)
-ax.set_xlabel("Kỳ")
-ax.set_ylabel("Giá trị")
-ax.set_title("Dữ liệu & các điểm MVT ước lượng (với các tiếp tuyến ước lượng)")
-ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1))
-st.pyplot(fig)
-
-if len(df) < 2:
-    st.warning("⚠️ Cần ít nhất 2 kỳ để tính toán.")
-else:
-    slopes, comments, periods = [], [], []
-
-    for i in range(len(df) - 1):
-        a, b = df.iloc[i, 1], df.iloc[i + 1, 1]
-        slope = b - a
-        slopes.append(slope)
-        periods.append(f"{df.iloc[i, 0]} → {df.iloc[i + 1, 0]}")
-
-        if slope > 0:
-            comments.append("🔼 Tăng trưởng")
-        elif slope < 0:
-            comments.append("🔻 Suy giảm")
-        else:
-            comments.append("⏸ Ổn định")
-
-    results = pd.DataFrame({
-        "Khoảng thời gian": periods,
-        "Tốc độ thay đổi (Δ)": slopes,
-        "Nhận xét": comments
-    })
-
-    st.dataframe(results)
-
-# --- Tính slope giữa từng cặp ---
-st.subheader("Tính toán cơ bản")
-t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
-y = df["Giá trị"].to_numpy()
-
-slopes = np.diff(y) / np.diff(t)  # dt = 1 -> chỉ là diff
-periods = [f"{df.loc[i,'Kỳ']} → {df.loc[i+1,'Kỳ']}" for i in range(n-1)]
-
-# hiển thị bảng slopes
-slopes_df = pd.DataFrame({
-    "Khoảng thời gian": periods,
-    "Giá trị tại a": [y[i] for i in range(n-1)],
-    "Giá trị tại b": [y[i+1] for i in range(n-1)],
-    "Slope (Δ = b - a)": slopes
-})
-st.subheader("Slope (tốc độ thay đổi trung bình) giữa các kỳ")
-st.dataframe(slopes_df.style.format({"Slope (Δ = b - a)": "{:+.3f}"}))
-
-# 🔹 Tổng kết định tính toàn giai đoạn dựa trên slope trung bình
-avg_slope = np.mean(slopes)
-if avg_slope > 0:
-    overall = "✅ Doanh nghiệp đang tăng trưởng trung bình ổn định."
-elif avg_slope < 0:
-    overall = "⚠️ Doanh nghiệp có xu hướng suy giảm nhẹ trong giai đoạn này."
-else:
-    overall = "ℹ️ Doanh nghiệp ổn định, không thay đổi đáng kể."
-
-st.success(overall)
-
-# --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
-deriv = np.zeros(n)
-if n == 2:
-    # trivial: forward/backward same
-    deriv[0] = slopes[0]
-    deriv[1] = slopes[0]
-else:
-    deriv[0] = (y[1] - y[0]) / (t[1] - t[0])  # forward diff
-    deriv[-1] = (y[-1] - y[-2]) / (t[-1] - t[-2])  # backward diff
-    for i in range(1, n-1):
-        deriv[i] = (y[i+1] - y[i-1]) / (t[i+1] - t[i-1])  # central difference
-
-deriv_df = pd.DataFrame({
-    "Kỳ": df["Kỳ"],
-    "Giá trị": df["Giá trị"],
-    "Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": deriv
-})
-st.subheader("Đạo hàm xấp xỉ tại từng điểm (tốc độ tức thời)")
-st.dataframe(deriv_df.style.format({"Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": "{:+.3f}"}))
-
-st.markdown("""
 ---
 *Ghi chú về phương pháp:*  
 - Bởi dữ liệu thực là rời rạc (theo quý/năm), ta dùng các xấp xỉ đạo hàm (forward/backward/central) để mô phỏng f'(t).  
