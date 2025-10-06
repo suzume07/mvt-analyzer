@@ -138,7 +138,27 @@ st.dataframe(mvt_table[display_cols].rename(columns={
 }))
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
-st.header("3. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
+st.header("2. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
+#tinh slope giua tung cap#
+t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
+y = df["Giá trị"].to_numpy()
+
+slopes = np.diff(y) / np.diff(t)  # dt = 1 -> chỉ là diff
+periods = [f"{df.loc[i,'Kỳ']} → {df.loc[i+1,'Kỳ']}" for i in range(n-1)]
+
+# --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
+deriv = np.zeros(n)
+if n == 2:
+    # trivial: forward/backward same
+    deriv[0] = slopes[0]
+    deriv[1] = slopes[0]
+else:
+    deriv[0] = (y[1] - y[0]) / (t[1] - t[0])  # forward diff
+    deriv[-1] = (y[-1] - y[-2]) / (t[-1] - t[-2])  # backward diff
+    for i in range(1, n-1):
+        deriv[i] = (y[i+1] - y[i-1]) / (t[i+1] - t[i-1])  # central difference
+
+
 for rec in records:
     seg = rec["Segment"]
     with st.expander(f"Giải thích: {seg}", expanded=False):
