@@ -153,30 +153,30 @@ for i in range(n - 1):
 
 mvt_table = pd.DataFrame(records)
 # hiển thị bảng tóm tắt
-st.subheader("Bảng tóm tắt MVT ước lượng cho từng đoạn")
-display_cols = ["Segment", "a_val", "b_val", "slope", "deriv_a", "deriv_b", "y_c", "deriv_c"]
-st.dataframe(mvt_table[display_cols].rename(columns={
-    "a_val": "Giá trị a",
-    "b_val": "Giá trị b",
-    "slope": "Slope (Δ)",
-    "deriv_a": "Đạo hàm tại a",
-    "deriv_b": "Đạo hàm tại b",
-    "y_c": "Giá trị f(c) ước lượng",
-    "deriv_c": "Đạo hàm ước lượng tại c",
+#st.subheader("Bảng tóm tắt MVT ước lượng cho từng đoạn")
+#display_cols = ["Segment", "a_val", "b_val", "slope", "deriv_a", "deriv_b", "y_c", "deriv_c"]
+#st.dataframe(mvt_table[display_cols].rename(columns={
+ #   "a_val": "Giá trị a",
+  #  "b_val": "Giá trị b",
+   # "slope": "Slope (Δ)",
+    #"deriv_a": "Đạo hàm tại a",
+    #"deriv_b": "Đạo hàm tại b",
+    #"y_c": "Giá trị f(c) ước lượng",
+    #"deriv_c": "Đạo hàm ước lượng tại c",
 
-}).style.format({
-    "Giá trị a": "{:.3f}",
-    "Giá trị b": "{:.3f}",
-    "Slope (Δ)": "{:+.3f}",
-    "Đạo hàm tại a": "{:+.3f}",
-    "Đạo hàm tại b": "{:+.3f}",
-    "Giá trị f(c) ước lượng": "{:.3f}",
-    "Đạo hàm ước lượng tại c": "{:+.3f}",
+#}).style.format({
+ #   "Giá trị a": "{:.3f}",
+ #   "Giá trị b": "{:.3f}",
+ #   "Slope (Δ)": "{:+.3f}",
+ #   "Đạo hàm tại a": "{:+.3f}",
+ #   "Đạo hàm tại b": "{:+.3f}",
+ #   "Giá trị f(c) ước lượng": "{:.3f}",
+ #   "Đạo hàm ước lượng tại c": "{:+.3f}",
 
-}))
+#}))
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
-st.header("2. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
+#st.header("2. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
 #tinh slope giua tung cap#
 t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
 y = df["Giá trị"].to_numpy()
