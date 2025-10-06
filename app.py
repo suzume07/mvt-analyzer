@@ -185,7 +185,7 @@ slopes = np.diff(y) / np.diff(t)  # dt = 1 -> chỉ là diff
 periods = [f"{df.loc[i,'Kỳ']} → {df.loc[i+1,'Kỳ']}" for i in range(n-1)]
 
 # --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
-deriv = np.zeros(n)
+#deriv = np.zeros(n)
 if n == 2:
     # trivial: forward/backward same
     deriv[0] = slopes[0]
