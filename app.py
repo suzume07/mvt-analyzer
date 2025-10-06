@@ -276,7 +276,7 @@ else:
             comments.append("⏸ Ổn định")
 
     results = pd.DataFrame({
-        "Khoảng thời gian": periods,
+        "Kỳ": periods,
         "Tốc độ thay đổi (Δ)": slopes,
         "Nhận xét": comments
     })
@@ -333,7 +333,7 @@ st.subheader("Đạo hàm xấp xỉ tại từng điểm (tốc độ tức th�
 st.dataframe(deriv_df.style.format({"Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": "{:+.3f}"}))
 
 # --- Phân tích MVT cho từng đoạn ---
-st.header("3. Phân tích MVT – từng bước cho mỗi đoạn")
+st.header("4. Phân tích theo MVT")
 
 records = []
 plot_mvt_points = []  # (c, y_c, slope, segment_index)
@@ -400,9 +400,10 @@ for i in range(n - 1):
 
 mvt_table = pd.DataFrame(records)
 # hiển thị bảng tóm tắt
-st.subheader("Bảng tóm tắt MVT ước lượng cho từng đoạn")
+st.subheader("Bảng tóm tắt ước lượng cho từng đoạn")
 display_cols = ["Segment", "a_val", "b_val", "slope", "deriv_a", "deriv_b", "y_c", "deriv_c"]
 st.dataframe(mvt_table[display_cols].rename(columns={
+    "Segment": " Kỳ",
     "a_val": "Giá trị a",
     "b_val": "Giá trị b",
     "slope": "Slope (Δ)",
@@ -423,7 +424,7 @@ st.dataframe(mvt_table[display_cols].rename(columns={
 }))
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
-st.header("4. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
+st.header("5. Giải thích chi tiết theo từng bước (cho mỗi giai đoạn)")
 #tinh slope giua tung cap#
 t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
 y = df["Giá trị"].to_numpy()
