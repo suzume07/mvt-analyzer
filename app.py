@@ -47,57 +47,8 @@ if n < 2:
     st.warning("Cần ít nhất 2 kỳ để phân tích.")
     st.stop()
 
-# --- Tính slope giữa từng cặp ---
-st.header("2. Tính toán cơ bản")
-t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
-y = df["Giá trị"].to_numpy()
-
-slopes = np.diff(y) / np.diff(t)  # dt = 1 -> chỉ là diff
-periods = [f"{df.loc[i,'Kỳ']} → {df.loc[i+1,'Kỳ']}" for i in range(n-1)]
-
-# hiển thị bảng slopes
-slopes_df = pd.DataFrame({
-    "Khoảng thời gian": periods,
-    "Giá trị tại a": [y[i] for i in range(n-1)],
-    "Giá trị tại b": [y[i+1] for i in range(n-1)],
-    "Slope (Δ = b - a)": slopes
-})
-st.subheader("Slope (tốc độ thay đổi trung bình) giữa các kỳ")
-st.dataframe(slopes_df.style.format({"Slope (Δ = b - a)": "{:+.3f}"}))
-
-# 🔹 Tổng kết định tính toàn giai đoạn dựa trên slope trung bình
-avg_slope = np.mean(slopes)
-if avg_slope > 0:
-    overall = "✅ Doanh nghiệp đang tăng trưởng trung bình ổn định."
-elif avg_slope < 0:
-    overall = "⚠️ Doanh nghiệp có xu hướng suy giảm nhẹ trong giai đoạn này."
-else:
-    overall = "ℹ️ Doanh nghiệp ổn định, không thay đổi đáng kể."
-
-st.success(overall)
-
-# --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
-deriv = np.zeros(n)
-if n == 2:
-    # trivial: forward/backward same
-    deriv[0] = slopes[0]
-    deriv[1] = slopes[0]
-else:
-    deriv[0] = (y[1] - y[0]) / (t[1] - t[0])  # forward diff
-    deriv[-1] = (y[-1] - y[-2]) / (t[-1] - t[-2])  # backward diff
-    for i in range(1, n-1):
-        deriv[i] = (y[i+1] - y[i-1]) / (t[i+1] - t[i-1])  # central difference
-
-deriv_df = pd.DataFrame({
-    "Kỳ": df["Kỳ"],
-    "Giá trị": df["Giá trị"],
-    "Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": deriv
-})
-st.subheader("Đạo hàm xấp xỉ tại từng điểm (tốc độ tức thời)")
-st.dataframe(deriv_df.style.format({"Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": "{:+.3f}"}))
-
 # --- Phân tích MVT cho từng đoạn ---
-st.header("3. Phân tích MVT – từng bước cho mỗi đoạn")
+st.header("2. Phân tích MVT – từng bước cho mỗi đoạn")
 
 records = []
 plot_mvt_points = []  # (c, y_c, slope, segment_index)
@@ -187,7 +138,7 @@ st.dataframe(mvt_table[display_cols].rename(columns={
 }))
 
 # --- Chi tiết từng bước: dùng expander cho mỗi đoạn ---
-st.header("4. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
+st.header("3. Giải thích chi tiết theo từng bước (cho mỗi đoạn)")
 for rec in records:
     seg = rec["Segment"]
     with st.expander(f"Giải thích: {seg}", expanded=False):
@@ -221,7 +172,7 @@ for rec in records:
         st.markdown("---")
 
 # --- Vẽ biểu đồ với điểm c và tiếp tuyến ước lượng ---
-st.header("5. Biểu đồ minh họa (các điểm MVT & tiếp tuyến ước lượng)")
+st.header("4. Biểu đồ minh họa (các điểm MVT & tiếp tuyến ước lượng)")
 fig, ax = plt.subplots(figsize=(10, 4))
 x = t
 ax.plot(x, y, marker="o", linestyle="-", label="Giá trị thực tế")
@@ -273,6 +224,55 @@ else:
     })
 
     st.dataframe(results)
+
+# --- Tính slope giữa từng cặp ---
+st.subheader("Tính toán cơ bản")
+t = np.arange(n)  # đơn vị thời gian giả định đều (mỗi kỳ = 1)
+y = df["Giá trị"].to_numpy()
+
+slopes = np.diff(y) / np.diff(t)  # dt = 1 -> chỉ là diff
+periods = [f"{df.loc[i,'Kỳ']} → {df.loc[i+1,'Kỳ']}" for i in range(n-1)]
+
+# hiển thị bảng slopes
+slopes_df = pd.DataFrame({
+    "Khoảng thời gian": periods,
+    "Giá trị tại a": [y[i] for i in range(n-1)],
+    "Giá trị tại b": [y[i+1] for i in range(n-1)],
+    "Slope (Δ = b - a)": slopes
+})
+st.subheader("Slope (tốc độ thay đổi trung bình) giữa các kỳ")
+st.dataframe(slopes_df.style.format({"Slope (Δ = b - a)": "{:+.3f}"}))
+
+# 🔹 Tổng kết định tính toàn giai đoạn dựa trên slope trung bình
+avg_slope = np.mean(slopes)
+if avg_slope > 0:
+    overall = "✅ Doanh nghiệp đang tăng trưởng trung bình ổn định."
+elif avg_slope < 0:
+    overall = "⚠️ Doanh nghiệp có xu hướng suy giảm nhẹ trong giai đoạn này."
+else:
+    overall = "ℹ️ Doanh nghiệp ổn định, không thay đổi đáng kể."
+
+st.success(overall)
+
+# --- Ước lượng đạo hàm tại mỗi điểm (forward/backward/central) ---
+deriv = np.zeros(n)
+if n == 2:
+    # trivial: forward/backward same
+    deriv[0] = slopes[0]
+    deriv[1] = slopes[0]
+else:
+    deriv[0] = (y[1] - y[0]) / (t[1] - t[0])  # forward diff
+    deriv[-1] = (y[-1] - y[-2]) / (t[-1] - t[-2])  # backward diff
+    for i in range(1, n-1):
+        deriv[i] = (y[i+1] - y[i-1]) / (t[i+1] - t[i-1])  # central difference
+
+deriv_df = pd.DataFrame({
+    "Kỳ": df["Kỳ"],
+    "Giá trị": df["Giá trị"],
+    "Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": deriv
+})
+st.subheader("Đạo hàm xấp xỉ tại từng điểm (tốc độ tức thời)")
+st.dataframe(deriv_df.style.format({"Đạo hàm xấp xỉ f'(t) (tốc độ tức thời)": "{:+.3f}"}))
 
 st.markdown("""
 ---
