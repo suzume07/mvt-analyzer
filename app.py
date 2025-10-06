@@ -263,6 +263,15 @@ else:
 
     st.dataframe(results)
 
+avg_slope = np.mean(slopes)
+    if avg_slope > 0:
+        overall = "✅ Doanh nghiệp đang *tăng trưởng trung bình ổn định*."
+    elif avg_slope < 0:
+        overall = "⚠️ Doanh nghiệp có xu hướng *suy giảm nhẹ* trong giai đoạn này."
+    else:
+        overall = "ℹ️ Doanh nghiệp *ổn định, không thay đổi đáng kể*."
+
+    st.success(overall)
 
 st.markdown("""
 ---
@@ -270,8 +279,8 @@ st.markdown("""
 - Bởi dữ liệu thực là rời rạc (theo quý/năm), ta dùng các xấp xỉ đạo hàm (forward/backward/central) để mô phỏng f'(t).  
 - Khi f' tại hai đầu bao lấy slope trung bình, ta nội suy tuyến tính giữa hai giá trị đạo hàm để tìm vị trí c ước lượng (giả thiết đạo hàm biến đổi đều trong khoảng nhỏ).  
 - Phương pháp này gần đúng; nếu cần chính xác hơn có thể:
-  - dùng nội suy spline để có hàm mượt hơn rồi giải f'(t)=slope trong khoảng
-  - dùng dữ liệu có phân giải cao hơn (theo ngày/tuần).
+  - Dùng nội suy spline để có hàm mượt hơn rồi giải f'(t)=slope trong khoảng
+  - Dùng dữ liệu có phân giải cao hơn (theo ngày/tuần).
 """)
 
 st.markdown("""
